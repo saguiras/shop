@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using shop.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using shop.Models;
 using DTO;
 using shop.DTO;
 
@@ -22,71 +22,42 @@ namespace shop.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductsDTO>>> GetProducts()
+        public ActionResult<IEnumerable<ProductsDTO>> GetProducts()
         {
-            var products = from Products in _context.Products
-                           join Products_descriptions in _context.Products_Description on Products.id equals Products_descriptions.products_id
-                           select new ProductsDTO
-                           {
-                               Products_id = Products.id,
-                               Products_price = Products.price,
-                               Products_name = Products_descriptions.products_name,
-                               Products_description = Products_descriptions.products_description
-                           };
+            var product = from products in _context.Products
+            select new ProductsDTO
+            {
+                Product_name = products.Product_name,
+                Product_id = products.Product_id,
+                Price = products.Price,
+                Sell = products.Sell
+            };
 
-            return await products.ToListAsync();
+            var getProducts = product.ToList();
+
+            if (getProducts == null)
+                return NotFound();
+            return getProducts;
         }
 
         [HttpGet("{id}")]
         public ActionResult<ProductsDTO> GetProducts_byId(int id)
         {
-            var products = from Products in _context.Products
-                           join Products_descriptions in _context.Products_Description on Products.id equals Products_descriptions.products_id
-                           select new ProductsDTO
-                           {
-                               Products_id = Products.id,
-                               Products_price = Products.price,
-                               Products_name = Products_descriptions.products_name,
-                               Products_description = Products_descriptions.products_description
-                           };
-
-            var products_by_id = products.ToList().Find(x => x.Products_id == id);
-
-            if (products_by_id == null)
+            var product = from products in _context.Products
+            select new ProductsDTO
             {
+                Product_name = products.Product_name,
+                Product_id = products.Product_id,
+                Price = products.Price,
+                Sell = products.Sell
+            };
+
+            var getProducts = product.ToList().Find(x => x.Product_id == id);
+
+            if (getProducts == null)
                 return NotFound();
-            }
-            return products_by_id;
+
+            return getProducts;
         }
-
-
-        [HttpPost]
-        public async Task<ActionResult<AddProducts>> Add_Products(AddProducts ProductsDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var products = new Products()
-            {
-                price = ProductsDTO.Products_price
-            };
-            await _context.Products.AddAsync(products);
-            await _context.SaveChangesAsync();
-
-            var products_description = new Products_description()
-            {
-                products_id = products.id,
-                products_name = ProductsDTO.Products_name,
-                products_description = ProductsDTO.Products_description
-            };
-            await _context.AddAsync(products_description);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProducts", new { id = products.id }, ProductsDTO);
-        }
-
     }
-
 }

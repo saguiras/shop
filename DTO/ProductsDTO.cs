@@ -1,11 +1,18 @@
-﻿using Models;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace shop.DTO
 {
-    public class ProductsDTO : Orders
+    public class ProductsDTO
     {
-        public decimal Products_price { get; set; }
-        public string Products_name { get; set; }
-        public string Products_description { get; set; }
+        [Required]
+        public string Product_name { get; set; }
+        [Required]
+        public int Product_id { get; set; }
+        [Required]
+        public decimal Price { get; set; }
+        [Required]
+        public bool Sell { get; set; }
     }
 }

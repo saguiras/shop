@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace shop.Models
 {
     public class Customers
     {
         [Key]
-        public int Id { get; set; }
-        public string Orders { get; set; }
+        public int Customer_id { get; set; }
+        public string Customer_name { get; set; }
     }
 }

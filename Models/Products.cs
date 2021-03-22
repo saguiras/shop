@@ -1,11 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Models
+namespace shop.Models
 {
-    public class Products
+    public class Product
     {
         [Key]
-        public int id { get; set; }
-        public decimal price { get; set; }
+        public int Product_id { get; set; }
+        public string Product_name { get; set; }
+        public decimal Price { get; set; }
+        public bool Sell { get; set; }
+
+
     }
 }
